@@ -7,11 +7,11 @@ const BACKEND_URL = "http://localhost:3000/sendData";
 const sensors = ["Sensor-A", "Sensor-B"];
 
 function getRandomTemperature() {
-  return (20 + Math.random() * 10).toFixed(2); // Between 20°C and 30°C
+  return (20 + Math.random() * 10).toFixed(2); 
 }
 
 function getRandomHumidity() {
-  return (30 + Math.random() * 20).toFixed(2); // Between 30% and 50%
+  return (30 + Math.random() * 20).toFixed(2); 
 }
 
 async function sendSensorData(sensorName) {
@@ -27,10 +27,10 @@ async function sendSensorData(sensorName) {
       sensorData: JSON.stringify(data), // Assuming backend expects a string
     });
 
-    console.log(`✅ Sent data for ${sensorName}:`, data);
-    console.log(`📦 IPFS CID:`, response.data.ipfsCID);
+    console.log(`Sent data for ${sensorName}:`, data);
+    console.log(`IPFS CID:`, response.data.ipfsCID);
   } catch (err) {
-    console.error(`❌ Failed to send data for ${sensorName}:`, err.message);
+    console.error(`Failed to send data for ${sensorName}:`, err.message);
   }
 }
 
@@ -39,7 +39,7 @@ function startSimulation() {
   sensors.forEach((sensor) => {
     setInterval(() => {
       sendSensorData(sensor);
-    }, 5000); // Every 5 seconds
+    }, 5000);
   });
 }
 

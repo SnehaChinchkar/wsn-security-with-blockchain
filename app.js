@@ -94,7 +94,37 @@ const contractABI = [
 const contract = new ethers.Contract(ethers.getAddress(contractAddress), contractABI, wallet);
 console.log("Contract connected");
 
+// app.post("/sendData", async (req, res) => {
+//   try {
+//     const { sensorName, sensorData } = req.body;
+
+//     if (!sensorName || !sensorData) {
+//       return res.status(400).json({ error: "Sensor name and data are required" });
+//     }
+
+//     const ipfsCID = await uploadToIPFS(sensorName, sensorData);
+//     console.log("Stored on IPFS:", ipfsCID);
+// 	const nonce = await wallet.getNonce();
+//     const tx = await contract.storeSensorData(ipfsCID);
+//     await tx.wait();
+//     console.log("CID stored on-chain in tx:", tx.hash);
+
+//     res.json({ success: true, ipfsCID, txHash: tx.hash });
+
+//   } catch (error) {
+//     console.error("Error:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+let isProcessing = false;
+
 app.post("/sendData", async (req, res) => {
+  if (isProcessing) {
+    return res.status(429).json({ error: "Transaction already in progress. Please wait." });
+  }
+
+  isProcessing = true;
+
   try {
     const { sensorName, sensorData } = req.body;
 
@@ -104,8 +134,11 @@ app.post("/sendData", async (req, res) => {
 
     const ipfsCID = await uploadToIPFS(sensorName, sensorData);
     console.log("Stored on IPFS:", ipfsCID);
-	const nonce = await wallet.getNonce();
-    const tx = await contract.storeSensorData(ipfsCID);
+
+    const tx = await contract.storeSensorData(ipfsCID, {
+      gasLimit: 500000,
+    });
+
     await tx.wait();
     console.log("CID stored on-chain in tx:", tx.hash);
 
@@ -114,6 +147,8 @@ app.post("/sendData", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json({ error: error.message });
+  } finally {
+    isProcessing = false;
   }
 });
 

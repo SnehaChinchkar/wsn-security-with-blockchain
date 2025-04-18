@@ -1,8 +1,9 @@
-// src/components/MetaMaskConnect.jsx
 import React, { useState } from "react";
 import { ethers } from "ethers";
-import { contractABI } from "../contractConfig"; // Assume you export contractABI and contractAddress somewhere
-const contractAddress = "0xA97c403E42066Ab58662F3FeC3a3976eF393D006";
+import { BrowserProvider, Contract } from "ethers";
+import contractArtifact from "../../../artifacts/contracts/SensorDataStorage.sol/SensorDataStorage.json";
+const contractABI = contractArtifact.abi;
+const contractAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
 
 export default function MetaMaskConnect() {
   const [currentAccount, setCurrentAccount] = useState(null);
@@ -11,15 +12,14 @@ export default function MetaMaskConnect() {
   const connectWallet = async () => {
     if (window.ethereum) {
       try {
-        // Request account access if needed
         await window.ethereum.request({ method: "eth_requestAccounts" });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
+        const provider = new BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
         const userAddress = await signer.getAddress();
         setCurrentAccount(userAddress);
 
-        // Instantiate the contract with the user's signer so transaction can be signed by MetaMask
-        const contractInstance = new ethers.Contract(
+        
+        const contractInstance = new Contract(
           contractAddress,
           contractABI,
           signer

@@ -1,10 +1,9 @@
-// src/components/SensorDataViewer.jsx
+
 import { useState } from "react";
 import { getSensorData, getTransactionDetail } from "../api";
 
 function SensorDataViewer() {
   const [sensorAddress, setSensorAddress] = useState("");
-//   const [sensorData, setSensorData] = useState(null);
 const [sensorData, setSensorData] = useState([]);
 
   const [txHash, setTxHash] = useState("");
@@ -17,7 +16,7 @@ const [sensorData, setSensorData] = useState([]);
       console.log("Sensor data:", res.data.data);
       setSensorData(res.data.data);
     } catch (err) {
-      console.error("❌ Error fetching sensor data:", err);
+      console.error("Error fetching sensor data:", err);
     }
   };
 
@@ -26,7 +25,7 @@ const [sensorData, setSensorData] = useState([]);
       const res = await getTransactionDetail(txHash);
       setTxData(res.data);
     } catch (err) {
-      console.error("❌ Error fetching transaction detail:", err);
+      console.error("Error fetching transaction detail:", err);
     }
   };
 
@@ -47,7 +46,7 @@ const [sensorData, setSensorData] = useState([]);
 
 //       setIpfsPreview((prev) => ({ ...prev, [index]: content }));
 //     } catch (err) {
-//       setIpfsPreview((prev) => ({ ...prev, [index]: `❌ Error: ${err.message}` }));
+//       setIpfsPreview((prev) => ({ ...prev, [index]: ` Error: ${err.message}` }));
 //     }
 //   };
 const handleIPFSPreview = async (cid, index) => {
@@ -66,11 +65,10 @@ const handleIPFSPreview = async (cid, index) => {
         const text = await response.text();
   
         try {
-          // Try to parse in case it's JSON inside a string
           const parsed = JSON.parse(text);
           content = parsed;
         } catch {
-          content = { raw: text }; // fallback
+          content = { raw: text }; 
         }
       }
   
@@ -78,14 +76,14 @@ const handleIPFSPreview = async (cid, index) => {
     } catch (err) {
       setIpfsPreview((prev) => ({
         ...prev,
-        [index]: { error: `❌ Error: ${err.message}` },
+        [index]: { error: `Error: ${err.message}` },
       }));
     }
   };
   
   return (
     <div>
-      <h2>📥 View Sensor Data</h2>
+      <h2>View Sensor Data</h2>
       <input
         type="text"
         placeholder="Sensor Address"

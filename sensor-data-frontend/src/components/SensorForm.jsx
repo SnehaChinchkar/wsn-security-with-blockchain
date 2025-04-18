@@ -1,4 +1,3 @@
-// src/components/SensorForm.jsx
 import { useState } from "react";
 import { sendSensorData } from "../api";
 
@@ -14,7 +13,7 @@ function SensorForm() {
     const data = {
       temperature,
       humidity,
-      timestamp: new Date().toISOString(), // Auto-generated on upload
+      timestamp: new Date().toISOString(),
     };
 
     try {
